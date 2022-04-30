@@ -1,14 +1,10 @@
 import React from 'react';
-import './App.css';
 
-/**
- * Simple app component
- * @return {JSX.Element} return App.
- */
-function App() {
+const Component = () => {
   return (
     <div className="App">
       <header className="App-header">
+        <img className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to r eload.
         </p>
@@ -23,6 +19,6 @@ function App() {
       </header>
     </div>
   );
-}
+};
 
-export default App;
+export default Component;
