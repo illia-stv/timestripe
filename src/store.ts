@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import editorReducer from './features/editor/editorSlice';
+import treeSlice from './features/tree/tree_slice';
 
 export const store = configureStore({
   reducer: {
-    editor: editorReducer,
+    tree: treeSlice,
   },
 });
 
