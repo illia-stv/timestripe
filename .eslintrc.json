@@ -17,6 +17,7 @@
     "quotes": "off",
     "indend": "off",
     "comma-dangle": "off",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "no-console": 1
   }
 }
