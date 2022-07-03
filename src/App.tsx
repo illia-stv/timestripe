@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Sidebar from './features/tree/sidebar';
 import NoteBook from './features/note_book/note_book';
 import { NodeInterface } from './features/tree/tree_slice';
-import { useSelector } from 'react-redux';
 import Navbar from './components/navbar';
 
 const AppStyled = styled.div`
@@ -18,14 +17,12 @@ const MainContent = styled.div`
 `;
 
 function App() {
-  const nodes: NodeInterface[] = useSelector(
-    (state: { tree: { nodes: NodeInterface[] } }) => state.tree.nodes,
+
+  const [currentNode, setCurrentNode] = useState<NodeInterface | null>(
+    null
   );
 
-  const defualtNode = (nodes.length && nodes[0]) || null;
-  const [currentNode, setCurrentNode] = useState<NodeInterface | null>(
-    defualtNode,
-  );
+
   return (
     <AppStyled>
       <Navbar />

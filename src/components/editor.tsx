@@ -57,10 +57,10 @@ const Editor = ({
   save: (arg: string) => void;
 }) => {
   const [nodeContent, setNodeContent] = useState(text);
-  const [textAreaHeight, setTextAreaHeight] = useState(600);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
+      console.log(text)
     setNodeContent(text);
   }, [text]);
 
