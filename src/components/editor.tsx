@@ -1,9 +1,7 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import TextareaAutosize from 'react-textarea-autosize';
-import { DebouncedFunc } from 'lodash';
-import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
-import { NodeInterface } from '../features/tree/tree_slice';
+import MarkdownIt from 'markdown-it';
 
 const EditorWrapperStyled = styled.div`
   max-width: 80ch;
@@ -12,7 +10,6 @@ const EditorWrapperStyled = styled.div`
 
   margin: 20px auto 0;
   border-radius: 1px;
-  /* box-shadow: 0px 0px 10px 1px rgba(66, 68, 90, 0.1); */
   padding: 30px 30px 30px;
   @media (max-width: 640px) {
     width: 90vw;
@@ -60,7 +57,6 @@ const Editor = ({
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-      console.log(text)
     setNodeContent(text);
   }, [text]);
 
@@ -75,6 +71,7 @@ const Editor = ({
       >
         {' '}
       </EditorStyled>
+      {/* <MarkdownPreviewExample /> */}
       <SaveStyled>
         <SaveButtonStyled onClick={() => save(nodeContent)}>
           Save

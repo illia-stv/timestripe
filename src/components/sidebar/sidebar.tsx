@@ -1,13 +1,14 @@
-import { nanoid } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { createNode, removeNode } from '../../features/notes/notes_slice';
 import styled from 'styled-components';
-import { createNode, NodeInterface, removeNode, TreeState } from './tree_slice';
 import { ReactComponent as CreateIcon } from '../../assets/icons/create.svg';
 import { ReactComponent as DeleteIcon } from '../../assets/icons/delete.svg';
 
 const SidebarStyled = styled.div`
-  width: 370px;
+  min-width: 320px;
   height: 100%;
   background: #fafafa;
   border-right: 1px solid #ddd;
@@ -21,17 +22,16 @@ const SidebarStyled = styled.div`
 `;
 
 const CreateNodeStyled = styled.input`
-  margin: 0 20px 0;
   width: 9rem;
   outline: none;
   background: #fafafa;
   font-size: 1rem;
-  padding: 0.2rem 0.5rem;
   border: 1px solid transparent;
   transition: 0.2s;
+  padding-bottom: 5px;
   border-bottom: 1px solid #ddd;
   &:focus {
-    width: 12rem;
+    width: 14rem;
     transition: 0.2s;
   }
   &::placeholder {
@@ -87,6 +87,7 @@ const CreateNodeSectionStyled = styled.div`
   justify-content: space-between;
   padding: 0.2rem 0;
   align-items: center;
+  margin: 0.2rem 0 0.2rem 1.5rem;
 `;
 
 const Divider = styled.div`
@@ -95,58 +96,52 @@ const Divider = styled.div`
   margin: 20px 0;
 `;
 
-const Sidebar = ({
-  setCurrentNode,
-}: {
-  setCurrentNode: React.Dispatch<React.SetStateAction<NodeInterface | null>>;
-}) => {
-  const nodes: NodeInterface[] = useSelector(
-    (state: { tree: { nodes: NodeInterface[] } }) => state.tree.nodes,
-  );
-  const [nodeName, setNodeName] = useState('');
-  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const defualtNode = {
-    nodes: [],
-    leaf: {
-      content: 'type something',
-      name: 'name',
-    },
-    name: nodeName,
-    id: nanoid(),
-  };
+const Sidebar = () => {
+  const navigate = useNavigate();
+  const nodes = useSelector((state: any) => state.notes.nodes);
   const dispatch = useDispatch();
+  const [createNoteInput, setCreateNoteInput] = useState('');
 
-  const handleKeyPress = (e: { key: string }) => {
+  const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      dispatch(createNode(defualtNode));
-      setNodeName('');
+      onCreateNode();
     }
   };
 
+  const onCreateNode = () => {
+    dispatch(
+      createNode({
+        name: createNoteInput,
+      }),
+    );
+    cleanINput();
+  };
+
+  const cleanINput = () => {
+    setCreateNoteInput('');
+  };
+
   return (
-    <SidebarStyled hidden={isSidebarVisible}>
+    <SidebarStyled>
       <TitleStyled>Create note</TitleStyled>
       <CreateNodeSectionStyled>
         <CreateNodeStyled
           placeholder="Create new node"
-          value={nodeName}
-          onKeyPress={handleKeyPress}
-          onChange={(e) => setNodeName(e.target.value)}
+          value={createNoteInput}
+          onChange={(e) => setCreateNoteInput(e.target.value)}
+          onKeyDown={(e) => onKeyDownHandler(e)}
         />
-        <CreateIconStyled
-          onClick={(): void => {
-            dispatch(createNode(defualtNode));
-            setNodeName('');
-          }}
-        />
+        <CreateIconStyled onClick={(): void => onCreateNode()} />
       </CreateNodeSectionStyled>
       <Divider />
       <TitleStyled>Your notes</TitleStyled>
       <TreeWrapper>
-        {nodes.map((item, key) => (
-          <NodeStyled onClick={() => setCurrentNode(nodes[key])} key={item.id}>
-            <div>{nodes[key].name}</div>
-            <DeleteButton onClick={() => dispatch(removeNode(item))} />
+        {nodes.map((item: any) => (
+          <NodeStyled key={item.id} onClick={() => navigate(`/${item.id}`)}>
+            <div>{item.name}</div>
+            <DeleteButton
+              onClick={() => dispatch(removeNode({ id: item.id }))}
+            />
           </NodeStyled>
         ))}
       </TreeWrapper>

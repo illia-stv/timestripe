@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import Editor from '../../components/editor';
-import { NodeInterface, saveChanges } from '../tree/tree_slice';
+import Editor from '../editor';
+import {
+  NodeInterface,
+  saveChanges,
+} from '../../features/sidebar/sidebar_slice';
 
 const TitleStyled = styled.h1`
   text-align: center;

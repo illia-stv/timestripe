@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { NodeInterface } from '../tree/tree_slice';
+import { NodeInterface } from '../../features/sidebar/sidebar_slice';
 import Leaf from './leaf';
 
 const NoteBookStyled = styled.div`

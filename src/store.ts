@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import treeSlice from './features/tree/tree_slice';
+import sidebarSlice from './features/sidebar/sidebar_slice';
+import notesSlice from './features/notes/notes_slice';
 
 export const store = configureStore({
   reducer: {
-    tree: treeSlice,
+    sidebar: sidebarSlice,
+    notes: notesSlice,
   },
 });
 

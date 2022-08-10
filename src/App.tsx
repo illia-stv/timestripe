@@ -1,9 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Sidebar from './features/tree/sidebar';
-import NoteBook from './features/note_book/note_book';
-import { NodeInterface } from './features/tree/tree_slice';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import Sidebar from './components/sidebar/sidebar';
+import NoteBook from './components/note_book/note_book';
+import { NodeInterface } from './features/sidebar/sidebar_slice';
 import Navbar from './components/navbar';
+import NoteContainer from './components/note/note_container';
 
 const AppStyled = styled.div`
   height: 100vh;
@@ -17,20 +20,20 @@ const MainContent = styled.div`
 `;
 
 function App() {
-
-  const [currentNode, setCurrentNode] = useState<NodeInterface | null>(
-    null
-  );
-
+  const [currentNode, setCurrentNode] = useState<NodeInterface | null>(null);
 
   return (
-    <AppStyled>
-      <Navbar />
-      <MainContent>
-        <Sidebar setCurrentNode={setCurrentNode} />
-        <NoteBook currentNode={currentNode} />
-      </MainContent>
-    </AppStyled>
+    <BrowserRouter>
+      <AppStyled>
+        <Navbar />
+        <MainContent>
+          <Sidebar />
+          <Routes>
+            <Route path=":id" element={<NoteContainer />} />
+          </Routes>
+        </MainContent>
+      </AppStyled>
+    </BrowserRouter>
   );
 }
 
