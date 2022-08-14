@@ -18,11 +18,41 @@ export interface TreeState {
 
 export type addNodeType = { name: string };
 
-export const treeSlice = createSlice({
-  name: 'tree',
-  initialState: {
+const nodes = [
+  {
     nodes: [],
+    leaf: {
+      content: 'content 1',
+      name: 'name 1',
+    },
+    name: 'node 1',
+    id: nanoid(),
   },
+  {
+    nodes: [],
+    leaf: {
+      content: 'content 2',
+      name: 'name 2',
+    },
+    name: 'node 2',
+    id: nanoid(),
+  },
+  {
+    nodes: [],
+    leaf: {
+      content: 'content 3',
+      name: 'name 3',
+    },
+    name: 'node 3',
+    id: nanoid(),
+  },
+];
+
+const initialState: TreeState = { nodes };
+
+export const treeSlice = createSlice({
+  name: 'sidebar',
+  initialState,
   reducers: {
     createNode: (state: TreeState, action: PayloadAction<NodeInterface>) => {
       state.nodes.push(action.payload);
