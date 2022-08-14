@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,14 +7,21 @@ import styled from 'styled-components';
 import { ReactComponent as CreateIcon } from '../../assets/icons/create.svg';
 import { ReactComponent as DeleteIcon } from '../../assets/icons/delete.svg';
 
-const SidebarStyled = styled.div`
-  min-width: 320px;
-  height: 100%;
+interface SidebarProps {
+  readonly offsetTop: number;
+}
+
+const SidebarStyled = styled.div<SidebarProps>`
+  width: 320px;
+  position: fixed;
+  top: ${(props: SidebarProps) => `${props.offsetTop}px`};
+  height: ${(props: SidebarProps) => `calc(100vh - ${props.offsetTop}px)`};
+  overflow-y: auto;
+  overflow-x: hidden;
   background: #fafafa;
   border-right: 1px solid #ddd;
   display: ${(props) => (props.hidden ? 'none' : 'block')};
   z-index: 1;
-  overflow: hidden;
   @media (max-width: 800px) {
     flex-direction: column;
     width: 100vw;
@@ -22,20 +29,21 @@ const SidebarStyled = styled.div`
 `;
 
 const CreateNodeStyled = styled.input`
-  width: 9rem;
+  width: 11rem;
   outline: none;
   background: #fafafa;
   font-size: 1rem;
   border: 1px solid transparent;
   transition: 0.2s;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #ddd;
+  padding: 5px 10px;
+
   &:focus {
-    width: 14rem;
     transition: 0.2s;
+    box-shadow: 0px 5px 10px 0px rgba(66, 68, 90, 0.1);
   }
   &::placeholder {
     font-weight: 100;
+    color: #ddd;
   }
 `;
 
@@ -47,16 +55,45 @@ const NodeStyled = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  line-height: 1;
-  padding: 0.2rem 0.5rem;
+  align-items: center;
+  padding: 0.6rem 0.5rem;
   font-size: 1rem;
   cursor: pointer;
   color: #333;
   font-weight: 500;
-  border-bottom: 1px solid #ddd;
   border-radius: 5px;
-  max-width: 15.5rem;
-  margin: 0 0 0.8rem;
+  max-width: 16.5rem;
+  transition: 0.2s;
+  &:hover {
+    transition: 0.2s;
+    box-shadow: 0px 0px 10px 0px rgba(66, 68, 90, 0.1);
+  }
+`;
+
+const DeleteButtonWrapperStyled = styled.div`
+  min-width: 1.2rem;
+  height: 1.2rem;
+  display: flex;
+  marging-left: 3px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DeleteButton = styled(DeleteIcon)`
+  background: #fafafa;
+  border: none;
+  font-weight: 900;
+  opacity: 0;
+  transition: 0.2s;
+  width: 0;
+  height: 0;
+  fill: red;
+  ${NodeStyled}:hover & {
+    opacity: 1;
+    width: 1.1rem;
+    height: 1.1rem;
+    transition: 0.1s;
+  }
 `;
 
 const TitleStyled = styled.div`
@@ -65,20 +102,24 @@ const TitleStyled = styled.div`
   margin: 30px 20px;
 `;
 
-const DeleteButton = styled(DeleteIcon)`
-  background: #fafafa;
-  border: none;
-  font-weight: 900;
-  width: 1.2rem;
-  height: 1.2rem;
-  fill: red;
-`;
-
-const CreateIconStyled = styled(CreateIcon)`
-  width: 1.5rem;
-  height: 1.5rem;
-  fill: #333;
+const CreateButtonStyled = styled.div`
+  font-size: 1rem;
+  border-radius: 5px;
+  color: #333;
+  font-weight: 700;
+  padding: 9px 12px;
   cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0px 0px 10px 0px rgba(66, 68, 90, 0.1);
+  &:hover {
+    background: #dcdcdc;
+    transition: 0.2s;
+  }
+  &:active {
+    color: #ddd;
+    background: #333;
+    transition: 0.2s;
+  }
 `;
 
 const CreateNodeSectionStyled = styled.div`
@@ -100,6 +141,8 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const nodes = useSelector((state: any) => state.notes.nodes);
   const dispatch = useDispatch();
+  const sidebarRef: any = useRef(null);
+  const [offsetTop, setOffsetTop] = useState(48);
   const [createNoteInput, setCreateNoteInput] = useState('');
 
   const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -114,15 +157,21 @@ const Sidebar = () => {
         name: createNoteInput,
       }),
     );
-    cleanINput();
+    cleanInput();
   };
 
-  const cleanINput = () => {
+  const cleanInput = () => {
     setCreateNoteInput('');
   };
 
+  useEffect(() => {
+    if (sidebarRef.current) {
+      setOffsetTop(sidebarRef.current.offsetTop);
+    }
+  }, [sidebarRef]);
+
   return (
-    <SidebarStyled>
+    <SidebarStyled offsetTop={offsetTop} ref={sidebarRef}>
       <TitleStyled>Create note</TitleStyled>
       <CreateNodeSectionStyled>
         <CreateNodeStyled
@@ -131,7 +180,9 @@ const Sidebar = () => {
           onChange={(e) => setCreateNoteInput(e.target.value)}
           onKeyDown={(e) => onKeyDownHandler(e)}
         />
-        <CreateIconStyled onClick={(): void => onCreateNode()} />
+        <CreateButtonStyled onClick={(): void => onCreateNode()}>
+          Create
+        </CreateButtonStyled>
       </CreateNodeSectionStyled>
       <Divider />
       <TitleStyled>Your notes</TitleStyled>
@@ -139,9 +190,11 @@ const Sidebar = () => {
         {nodes.map((item: any) => (
           <NodeStyled key={item.id} onClick={() => navigate(`/${item.id}`)}>
             <div>{item.name}</div>
-            <DeleteButton
-              onClick={() => dispatch(removeNode({ id: item.id }))}
-            />
+            <DeleteButtonWrapperStyled>
+              <DeleteButton
+                onClick={() => dispatch(removeNode({ id: item.id }))}
+              />
+            </DeleteButtonWrapperStyled>
           </NodeStyled>
         ))}
       </TreeWrapper>
