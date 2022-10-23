@@ -1,4 +1,11 @@
-import { createSlice, PayloadAction, nanoid } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, nanoid, createSelector } from '@reduxjs/toolkit';
+import {
+  CreateNodeType,
+  DeleteNodeType,
+  SaveContentType,
+  SaveTitletType,
+  addNodeType
+} from "./notes_types"
 
 export interface LeafState {
   content: string;
@@ -12,29 +19,10 @@ export interface NodeInterface {
   id: string;
 }
 
-type CreateNodeType = {
-  name: string;
-};
-
-type DeleteNodeType = {
-  id: string;
-};
-
-type SaveContentType = {
-  content: string;
-  id: string;
-};
-
-type SaveTitletType = {
-  name: string;
-  id: string;
-};
-
 export interface TreeState {
   nodes: NodeInterface[];
 }
 
-export type addNodeType = { name: string };
 
 const nodes = [
   {
@@ -111,6 +99,10 @@ const reducers = {
     }
   },
 };
+
+const selectTree = (state: any) => state;
+
+export const nodesSelector = createSelector(selectTree, (state) => state.notes.nodes);
 
 export const notesSlice = createSlice({
   name: 'notes',
