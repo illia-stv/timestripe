@@ -4,7 +4,7 @@ import {
   DeleteNodeType,
   SaveContentType,
   SaveTitletType,
-  addNodeType
+  ReorderNoteType
 } from "./notes_types"
 
 export interface LeafState {
@@ -29,25 +29,25 @@ const nodes = [
     nodes: [],
     content: 'content 1',
     name: 'node 1',
-    id: nanoid(),
+    id: "wFFebjzGc24d6eL4Dx1gO",
   },
   {
     nodes: [],
     content: 'content 2',
     name: 'node 2',
-    id: nanoid(),
+    id: "ceePNznf7ZiGbJLCGN8W",
   },
   {
     nodes: [],
     content: 'content 3',
     name: 'node 3',
-    id: nanoid(),
+    id: "MABRQUM91Pannv9CmLsC4",
   },
   {
     nodes: [],
     content: 'content 4',
     name: 'node 4',
-    id: nanoid(),
+    id: "_mFRkO7F1ytjIvfZx3Gik",
   },
 ];
 
@@ -98,6 +98,17 @@ const reducers = {
       state.nodes[indexOfNode].name = name;
     }
   },
+  reorderNote: (
+    state: TreeState,
+    action: PayloadAction<ReorderNoteType>
+  ) => {
+    const { destination, source } = action.payload;
+    const reorderdNote = state.nodes[source.index];
+    const deleteNoteFromList = [...state.nodes.slice(0, source.index), ...state.nodes.slice(source.index + 1)];
+    const addNoteToList = [...deleteNoteFromList.slice(0, destination.index), reorderdNote, ...deleteNoteFromList.slice(destination.index)];
+
+    state.nodes = addNoteToList;
+  }
 };
 
 const selectTree = (state: any) => state;
@@ -110,7 +121,7 @@ export const notesSlice = createSlice({
   reducers,
 });
 
-export const { createNode, removeNode, saveContentInNote, saveTitletInNote } =
+export const { createNode, removeNode, saveContentInNote, saveTitletInNote, reorderNote } =
   notesSlice.actions;
 
 export default notesSlice.reducer;

@@ -4,6 +4,47 @@ import { keyframes } from 'styled-components';
 
 import Logo from '../../assets/icons/leaf.png';
 
+
+const logoValue = 'Conscentia';
+
+const Navbar = () => {
+  const [logo, setLogo] = useState('');
+
+  const startAnimation = () => {
+    let currentLogoValue = '';
+    const interval = setInterval(() => {
+      const logoLength = currentLogoValue.length;
+      if (logoLength !== logoValue.length) {
+        setLogo(currentLogoValue + logoValue[logoLength]);
+        currentLogoValue = currentLogoValue + logoValue[logoLength];
+      } else {
+        clearInterval(interval);
+      }
+    }, 50);
+  };
+
+  useEffect(() => {
+    startAnimation();
+  }, []);
+
+  return (
+    <NavbarStyled>
+      <LogoSectionStyled>
+        <LogoWrapper>
+          <LogoStyled src={Logo}></LogoStyled>
+        </LogoWrapper>
+        <LogoText>
+          {logo.split('').map((item, key) => (
+            <LetterWrapperStyled key={key}>
+              <LetterStyled>{item}</LetterStyled>
+            </LetterWrapperStyled>
+          ))}
+        </LogoText>
+      </LogoSectionStyled>
+    </NavbarStyled>
+  );
+};
+
 const logoIconApearingAnimation = keyframes`
   0% { transform: translateY(-100%) }
   40% { transform: translateY(20%) }
@@ -70,44 +111,5 @@ const LetterWrapperStyled = styled.div`
   height: 2rem;
 `;
 
-const logoValue = 'Conscentia';
-
-const Navbar = () => {
-  const [logo, setLogo] = useState('');
-
-  const startAnimation = () => {
-    let currentLogoValue = '';
-    const interval = setInterval(() => {
-      const logoLength = currentLogoValue.length;
-      if (logoLength !== logoValue.length) {
-        setLogo(currentLogoValue + logoValue[logoLength]);
-        currentLogoValue = currentLogoValue + logoValue[logoLength];
-      } else {
-        clearInterval(interval);
-      }
-    }, 50);
-  };
-
-  useEffect(() => {
-    startAnimation();
-  }, []);
-
-  return (
-    <NavbarStyled>
-      <LogoSectionStyled>
-        <LogoWrapper>
-          <LogoStyled src={Logo}></LogoStyled>
-        </LogoWrapper>
-        <LogoText>
-          {logo.split('').map((item, key) => (
-            <LetterWrapperStyled key={key}>
-              <LetterStyled>{item}</LetterStyled>
-            </LetterWrapperStyled>
-          ))}
-        </LogoText>
-      </LogoSectionStyled>
-    </NavbarStyled>
-  );
-};
 
 export default Navbar;
