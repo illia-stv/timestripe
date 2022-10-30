@@ -2,13 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { createNode, reorderNote } from '../../features/notes/notes_slice';
+import { DropResult } from 'react-beautiful-dnd';
 import { Divider, TitleStyled, SidebarStyled } from "./sidebar_styles";
 import CreateNote from "./create_note";
 import NotesList from "./notes_list";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const sidebarRef: any = useRef(null);
+  const sidebarRef = useRef<HTMLHeadingElement>(null);
   const [offsetTop, setOffsetTop] = useState(48);
   const [createNoteInput, setCreateNoteInput] = useState('');
 
@@ -37,10 +38,8 @@ const Sidebar = () => {
     }
   }, [sidebarRef]);
 
-  const onDragEnd = (data: any) => {
-    if (data.destination) {
-      dispatch(reorderNote(data))
-    }
+  const onDragEnd = (data: DropResult) => {
+    dispatch(reorderNote(data))
   }
 
   return (

@@ -1,42 +1,33 @@
 import React from 'react'
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import { useSelector } from 'react-redux';
 
-import { removeNode, nodesSelector } from '../../features/notes/notes_slice';
-import { TreeWrapper, NodeStyled, DeleteButtonWrapperStyled, DeleteButton } from "./sidebar_styles"
+import Note from "./note"
+import { NodeInterface, nodesSelector } from '../../features/notes/notes_slice';
+import { TreeWrapper } from "./sidebar_styles"
 
-type NotesListType = {
-    onDragEnd: any,
+type NotesListPropsType = {
+    onDragEnd: (arg: DropResult) => void,
 }
 
-const NotesList = ({ onDragEnd }: NotesListType) => {
-    const dispatch = useDispatch();
+const NotesList = ({ onDragEnd }: NotesListPropsType) => {
     const nodes = useSelector(nodesSelector);
-    const navigate = useNavigate();
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppableId">
-                {(provided, snapshot) => (
+                {(provided) => (
                     <TreeWrapper {...provided.droppableProps}
                         ref={provided.innerRef}>
-                        {nodes.map((item: any, index: number) => (
+                        {nodes.map((item: NodeInterface, index: number) => (
                             <Draggable key={item.id} draggableId={item.id} index={index}>
-                                {(provided, snapshot) => (
+                                {(provided) => (
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.dragHandleProps}
                                         {...provided.draggableProps}
                                     >
-                                        <NodeStyled onClick={() => navigate(`/${item.id}`)}>
-                                            <div>{item.name}</div>
-                                            <DeleteButtonWrapperStyled>
-                                                <DeleteButton
-                                                    onClick={() => dispatch(removeNode({ id: item.id }))}
-                                                />
-                                            </DeleteButtonWrapperStyled>
-                                        </NodeStyled>
+                                        <Note item={item} />
                                     </div>
                                 )}
                             </Draggable>

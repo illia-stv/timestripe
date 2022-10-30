@@ -3,16 +3,17 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import {
   NodeInterface,
+  nodeSelector,
   saveTitletInNote,
 } from '../../features/notes/notes_slice';
+import { RootState } from '../../store';
 import EditableTitle from '../editor/editable-title';
-import useDebounce from '../../hooks/debouncer';
 
 const NoteTitle = ({ noteId }: { noteId: string }) => {
-  const node: NodeInterface = useSelector((state: any) =>
-    state.notes.nodes.find((item: NodeInterface) => item.id === noteId),
+  const node: NodeInterface | undefined = useSelector((state: RootState) =>
+    nodeSelector(state, noteId),
   );
-  const nodeName = node && node.name;
+  const nodeName = node ? node.name : "";
   const [title, setTitle] = useState(nodeName);
   const dispatch = useDispatch();
 

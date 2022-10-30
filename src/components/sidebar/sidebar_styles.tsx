@@ -31,10 +31,11 @@ export const CreateNodeStyled = styled.input`
   border: 1px solid transparent;
   transition: 0.2s;
   padding: 5px 10px;
+  box-shadow: 0px 5px 10px 0px rgba(66, 68, 90, 0.1);
 
   &:focus {
     transition: 0.2s;
-    box-shadow: 0px 5px 10px 0px rgba(66, 68, 90, 0.1);
+    box-shadow: 0px 5px 10px 0px rgba(66, 68, 90, 0.2);
   }
   &::placeholder {
     font-weight: 100;

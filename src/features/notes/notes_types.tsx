@@ -11,16 +11,6 @@ export type SaveContentType = {
     id: string;
 };
 
-export type ReorderNoteType = {
-    destination: {
-        index: number
-    },
-    source: {
-        index: number,
-        draggableId: string,
-    }
-};
-
 export type SaveTitletType = {
     name: string;
     id: string;

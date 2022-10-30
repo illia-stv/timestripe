@@ -2,10 +2,10 @@ import React from 'react'
 import { TitleStyled, CreateNodeSectionStyled, CreateNodeStyled, CreateButtonStyled } from "./sidebar_styles";
 
 type CreateNoteTypes = {
-    createNoteInput: any,
-    setCreateNoteInput: any,
-    onKeyDownHandler: any,
-    onCreateNode: any
+    createNoteInput: string,
+    setCreateNoteInput: (arg: string) => void,
+    onKeyDownHandler: (arg: React.KeyboardEvent<HTMLInputElement>) => void,
+    onCreateNode: () => void,
 }
 
 const CreateNote = ({
@@ -24,7 +24,7 @@ const CreateNote = ({
                     onChange={(e) => setCreateNoteInput(e.target.value)}
                     onKeyDown={(e) => onKeyDownHandler(e)}
                 />
-                <CreateButtonStyled onClick={(): void => onCreateNode()}>
+                <CreateButtonStyled onClick={() => onCreateNode()}>
                     Create
                 </CreateButtonStyled>
             </CreateNodeSectionStyled>

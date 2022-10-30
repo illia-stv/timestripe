@@ -1,15 +1,17 @@
 import { createSlice, PayloadAction, nanoid, createSelector } from '@reduxjs/toolkit';
+import { DropResult } from 'react-beautiful-dnd';
+import { RootState } from '../../store';
 import {
   CreateNodeType,
   DeleteNodeType,
   SaveContentType,
   SaveTitletType,
-  ReorderNoteType
 } from "./notes_types"
 
 export interface LeafState {
   content: string;
   name: string;
+  id: string;
 }
 
 export interface NodeInterface {
@@ -100,9 +102,14 @@ const reducers = {
   },
   reorderNote: (
     state: TreeState,
-    action: PayloadAction<ReorderNoteType>
+    action: PayloadAction<DropResult>
   ) => {
     const { destination, source } = action.payload;
+
+    if (!destination) {
+      return
+    }
+
     const reorderdNote = state.nodes[source.index];
     const deleteNoteFromList = [...state.nodes.slice(0, source.index), ...state.nodes.slice(source.index + 1)];
     const addNoteToList = [...deleteNoteFromList.slice(0, destination.index), reorderdNote, ...deleteNoteFromList.slice(destination.index)];
@@ -111,9 +118,13 @@ const reducers = {
   }
 };
 
-const selectTree = (state: any) => state;
+const selectTree = (state: RootState) => state;
 
 export const nodesSelector = createSelector(selectTree, (state) => state.notes.nodes);
+export const nodeSelector = createSelector(
+  [nodesSelector, (state, id) => id],
+  (state, id) => state.find((item: NodeInterface) => item.id === id)
+);
 
 export const notesSlice = createSlice({
   name: 'notes',
