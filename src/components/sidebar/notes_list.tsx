@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautif
 import { useSelector } from 'react-redux';
 
 import Note from "./note"
-import { NodeInterface, nodesSelector } from '../../features/notes/notes_slice';
+import { TreeItem, nodesSelector } from '../../features/notes/notes_slice';
 import { TreeWrapper } from "./sidebar_styles"
 
 type NotesListPropsType = {
@@ -19,7 +19,7 @@ const NotesList = ({ onDragEnd }: NotesListPropsType) => {
                 {(provided) => (
                     <TreeWrapper {...provided.droppableProps}
                         ref={provided.innerRef}>
-                        {nodes.map((item: NodeInterface, index: number) => (
+                        {nodes.map((item: TreeItem, index: number) => (
                             <Draggable key={item.id} draggableId={item.id} index={index}>
                                 {(provided) => (
                                     <div

@@ -39,7 +39,7 @@ export const CreateNodeStyled = styled.input`
   }
   &::placeholder {
     font-weight: 100;
-    color: #666;
+    color: #dcdcdc;
   }
 `;
 
@@ -103,7 +103,7 @@ export const CreateButtonStyled = styled.div`
   border-radius: 5px;
   color: #333;
   font-weight: 700;
-  padding: 9px 12px;
+  padding: 7px 12px;
   transition: 0.2s;
   box-shadow: 0px 0px 10px 0px rgba(66, 68, 90, 0.1);
   &:hover {

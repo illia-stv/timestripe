@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const EditableTitleStyled = styled.input`
   width: 100%;
   margin: 30px 0 0;
-  cotent-align: center;
+  content-align: center;
   text-align: center;
   outline: none;
   border: none;

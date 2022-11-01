@@ -1,3 +1,4 @@
+"use strict"
 import { createSlice, PayloadAction, nanoid, createSelector } from '@reduxjs/toolkit';
 import { DropResult } from 'react-beautiful-dnd';
 import { RootState } from '../../store';
@@ -8,45 +9,52 @@ import {
   SaveTitletType,
 } from "./notes_types"
 
-export interface LeafState {
+export type TreeItem = (LeafType | NodeInterface);
+
+export enum TreeEnum {
+  LEAF,
+  NODE,
+}
+
+export type LeafType = {
   content: string;
   name: string;
   id: string;
+  type: TreeEnum.LEAF,
 }
 
 export interface NodeInterface {
-  nodes: NodeInterface[];
-  content: string;
+  nodes: TreeItem;
   name: string;
   id: string;
+  type: TreeEnum.NODE,
 }
 
 export interface TreeState {
-  nodes: NodeInterface[];
+  nodes: TreeItem[];
 }
 
-
-const nodes = [
+const nodes: TreeItem[] = [
   {
-    nodes: [],
+    type: TreeEnum.LEAF,
     content: 'content 1',
     name: 'node 1',
     id: "wFFebjzGc24d6eL4Dx1gO",
   },
   {
-    nodes: [],
+    type: TreeEnum.LEAF,
     content: 'content 2',
     name: 'node 2',
     id: "ceePNznf7ZiGbJLCGN8W",
   },
   {
-    nodes: [],
+    type: TreeEnum.LEAF,
     content: 'content 3',
     name: 'node 3',
     id: "MABRQUM91Pannv9CmLsC4",
   },
   {
-    nodes: [],
+    type: TreeEnum.LEAF,
     content: 'content 4',
     name: 'node 4',
     id: "_mFRkO7F1ytjIvfZx3Gik",
@@ -58,11 +66,11 @@ const initialState: TreeState = { nodes };
 const reducers = {
   createNode: (state: TreeState, action: PayloadAction<CreateNodeType>) => {
     const { name } = action.payload;
-    const newNote = {
+    const newNote: LeafType = {
       name,
       content: '',
-      nodes: [],
       id: nanoid(),
+      type: TreeEnum.LEAF,
     };
     state.nodes.unshift(newNote);
   },
@@ -84,7 +92,10 @@ const reducers = {
     });
     const indexOfNode = node && state.nodes.indexOf(node);
     if (indexOfNode !== undefined) {
-      state.nodes[indexOfNode].content = content;
+      const treeItem = state.nodes[indexOfNode];
+      if (treeItem.type === TreeEnum.LEAF) {
+        treeItem.content = content;
+      }
     }
   },
   saveTitletInNote: (
@@ -121,9 +132,9 @@ const reducers = {
 const selectTree = (state: RootState) => state;
 
 export const nodesSelector = createSelector(selectTree, (state) => state.notes.nodes);
-export const nodeSelector = createSelector(
-  [nodesSelector, (state, id) => id],
-  (state, id) => state.find((item: NodeInterface) => item.id === id)
+export const nodeSelectorById = createSelector(
+  [nodesSelector, (_, id) => id],
+  (state, id) => state.find((item: TreeItem) => item.id === id)
 );
 
 export const notesSlice = createSlice({

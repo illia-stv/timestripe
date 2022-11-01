@@ -3,19 +3,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import {
-  NodeInterface,
+  TreeEnum,
+  TreeItem,
   saveContentInNote,
-  nodeSelector
+  nodeSelectorById
 } from '../../features/notes/notes_slice';
 import useDebounce from '../../hooks/debouncer';
 import { RootState } from '../../store';
 import Editor from '../editor/autosize-editor';
 
 const NoteEditor = ({ noteId }: { noteId: string }) => {
-  const node: NodeInterface | undefined = useSelector((state: RootState) =>
-    nodeSelector(state, noteId),
+  const node: TreeItem | undefined = useSelector((state: RootState) =>
+    nodeSelectorById(state, noteId),
   );
-  const content = node ? node.content : "";
+  const content = node && node.type === TreeEnum.LEAF ? node.content : "";
   const [inputValue, setInputValue] = useState(content);
   const dispatch = useDispatch();
   const debouncer = useDebounce(inputValue, 1000);

@@ -2,12 +2,12 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { NodeInterface } from '../../features/notes/notes_slice'
+import { TreeItem } from '../../features/notes/notes_slice'
 import { removeNode } from '../../features/notes/notes_slice';
 import { DeleteButton, DeleteButtonWrapperStyled, NodeStyled } from './sidebar_styles'
 
 type NoteProps = {
-    item: NodeInterface
+    item: TreeItem
 }
 
 const Note = ({ item }: NoteProps) => {

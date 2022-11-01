@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
-  NodeInterface,
-  nodeSelector,
+  TreeItem,
+  nodeSelectorById,
   saveTitletInNote,
 } from '../../features/notes/notes_slice';
 import { RootState } from '../../store';
 import EditableTitle from '../editor/editable-title';
 
 const NoteTitle = ({ noteId }: { noteId: string }) => {
-  const node: NodeInterface | undefined = useSelector((state: RootState) =>
-    nodeSelector(state, noteId),
+  const node: TreeItem | undefined = useSelector((state: RootState) =>
+    nodeSelectorById(state, noteId),
   );
   const nodeName = node ? node.name : "";
   const [title, setTitle] = useState(nodeName);
