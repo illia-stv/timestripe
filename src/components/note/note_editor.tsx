@@ -12,6 +12,8 @@ import useDebounce from '../../hooks/debouncer';
 import { RootState } from '../../store';
 import Editor from '../editor/autosize-editor';
 
+const oneSecond = 1000;
+
 const NoteEditor = ({ noteId }: { noteId: string }) => {
   const node: TreeItem | undefined = useSelector((state: RootState) =>
     nodeSelectorById(state, noteId),
@@ -19,7 +21,7 @@ const NoteEditor = ({ noteId }: { noteId: string }) => {
   const content = node && node.type === TreeEnum.LEAF ? node.content : "";
   const [inputValue, setInputValue] = useState(content);
   const dispatch = useDispatch();
-  const debouncer = useDebounce(inputValue, 1000);
+  const debouncer = useDebounce(inputValue, oneSecond);
 
   useEffect(() => {
     setInputValue(content);
